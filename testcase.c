@@ -3,8 +3,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <sys/stat.h> 
+#include <sys/types.h> 
 #include <sys/wait.h>
 
 #include "Lpc.h"
@@ -44,7 +44,7 @@ int testcase1() {
 	char path[SIZE] = "./temp";
 	for (i = 0; i < 5; i++)
 	{
-		char buf[3];
+		char buf[3];	
 		sprintf(buf, "/%d", i);
 		strcat(path, buf);
 
@@ -59,7 +59,7 @@ int testcase1() {
 		int fd;
 		memset(dirName, 0, SIZE);
 		sprintf(dirName, "./etc/%d/file%d", i % 5, i);
-		if ((fd = OpenFile(dirName, O_CREAT)) == -1) {
+		if ((fd = OpenFile(dirName, O_CREAT)) == -1) { 
 			return -1;
 		}
 
@@ -100,7 +100,7 @@ int testcase1() {
 
 		memset(dirName, 0, SIZE);
 		sprintf(dirName, "./etc/%d/file%d", i % 5, i);
-		if ((fd = OpenFile(dirName, O_RDONLY)) == -1) {
+		if ((fd = OpenFile(dirName, O_RDONLY)) == -1) { 
 			return -1;
 		}
 
@@ -158,7 +158,7 @@ int prototype(char* t) {
 
 	for (i = 0; i < 5; i++)
 	{
-		char buf[3];
+		char buf[3];		
 		sprintf(buf, "/%d", i);
 		strcat(s2, buf);
 		usleep(300000);
@@ -174,7 +174,7 @@ int prototype(char* t) {
 		memset(dirName, 0, SIZE);
 		sprintf(dirName, "%s/%d/%s_file%d",s1, i % 5,t,i);
 		usleep(300000);
-		if ((fd = OpenFile(dirName, O_CREAT)) == -1) {
+		if ((fd = OpenFile(dirName, O_CREAT)) == -1) { 
 			return -1;
 		}
 
@@ -191,13 +191,13 @@ int prototype(char* t) {
 		memset(dirName, 0, SIZE);
 		sprintf(dirName, "%s/%d/%s_file%d",s1,i % 5,t, i);
 
-		if ((fd = OpenFile(dirName, O_WRONLY)) == -1) {
+		if ((fd = OpenFile(dirName, O_WRONLY)) == -1) { 
 			return -1;
 		}
 
 		strcpy(buf, arr[i % 5]);
 		usleep(300000);
-		if (WriteFile(fd, buf, sizeof(buf)) == -1) {
+		if (WriteFile(fd, buf, sizeof(buf)) == -1) { 
 			return -1;
 		}
 
@@ -215,7 +215,7 @@ int prototype(char* t) {
 
 		memset(dirName, 0, SIZE);
 		sprintf(dirName, "%s/%d/%s_file%d",s1, i % 5,t, i);
-		if ((fd = OpenFile(dirName, O_RDONLY)) == -1) {
+		if ((fd = OpenFile(dirName, O_RDONLY)) == -1) { 
 			return -1;
 		}
 		usleep(300000);
@@ -270,32 +270,29 @@ int testcase2() {
 int testcase3(){	// modified : void -> int
 
 	int i;
-
+	
 	char dirName[SIZE];
 	char pBuf[SIZE];
 	char arr[5][255] = { "I_LOVE_SOSIL","I_LOVE_OS","SIGONG_JOA","LINUX_JOA","TOVALDS_JOA" };
 
 	if (MakeDirectory("./usr", 0755) == -1) {
-            printf("279 fail\n");
-            return -1;
+		return -1;
 	}
 
 	if (MakeDirectory("./bin", 0755) == -1) {
-            printf("284 fail\n");
-            return -1;
+		return -1;
 	}
+	
 
-
-
-
+	
+	
 	for (i = 0; i < 5; i++)
 	{
 		memset(dirName, 0, SIZE);
 		sprintf(dirName, "./usr/%d", i);
 
 		if (MakeDirectory(dirName, 0755) == -1) {
-                    printf("297 fail\n");
-                    return -1;
+			return -1;
 		}
 	}
 
@@ -307,8 +304,7 @@ int testcase3(){	// modified : void -> int
 		strcat(path, buf);
 
 		if (MakeDirectory(path, 0755) == -1) {
-                    printf("310 fail\n");
-                    return -1;
+			return -1;
 		}
 	}
 
@@ -318,18 +314,16 @@ int testcase3(){	// modified : void -> int
 		int fd;
 		memset(dirName, 0, SIZE);
 		sprintf(dirName, "./usr/%d/file%d", i % 5, i);
-		if ((fd = OpenFile(dirName, O_CREAT)) == -1) {
-                    printf("322 fail\n");
-                    return -1;
+		if ((fd = OpenFile(dirName, O_CREAT)) == -1) { 
+			return -1;
 		}
 
 		if (CloseFile(fd) == -1) {
-                    printf("327 fail\n");
-                    return -1;
+			return -1;
 		}
 	}
 
-
+	
 	//write file
 	for (int i = 0; i < 20; i++)
 	{
@@ -352,7 +346,7 @@ int testcase3(){	// modified : void -> int
 			return -1;
 		}
 	}
-
+	
 	//read file
 	for (int i = 0; i < 20; i++)
 	{
@@ -362,7 +356,7 @@ int testcase3(){	// modified : void -> int
 
 		memset(dirName, 0, SIZE);
 		sprintf(dirName, "./usr/%d/file%d", i % 5, i);
-		if ((fd = OpenFile(dirName, O_RDONLY)) == -1) {
+		if ((fd = OpenFile(dirName, O_RDONLY)) == -1) { 
 			return -1;
 		}
 
@@ -378,13 +372,11 @@ int testcase3(){	// modified : void -> int
 		strcpy(buf, arr[i % 5]);
 
 		if (strcmp(pBuf, buf) != 0) {
-                    printf("381 fail\n");
-                    return -1;
+			return -1;
 		}
 
 		if (CloseFile(fd) == -1) {
-                    printf("386 fail\n");
-                    return -1;
+			return -1;
 		}
 	}
 
@@ -416,7 +408,7 @@ int main(int argc, char** argv) {
 			printf("testcase2 Success!!!\n");
 
 		break;
-	case 3:
+	case 3: 
 		if(testcase3() == 1)
 			printf("testcase3 Success!!\n");
 		break;
@@ -424,3 +416,4 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
+

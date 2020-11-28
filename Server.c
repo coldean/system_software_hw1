@@ -45,18 +45,16 @@ int main(void) {
         lpcArgs = lpcRequest->lpcArgs;
 
         int fd, size, a;
-        printf("\n\n%s\n", lpcRequest->lpcArgs[0].argData);
+        printf("cilent's pid : %ld\n", clientPid);
 
         switch (lpcService) {
         case LPC_OPEN_FILE:
             fd = OpenFile(lpcRequest->lpcArgs[0].argData,
                           atoi(lpcRequest->lpcArgs[1].argData), clientPid);
-            printf("openfile");
             fflush(stdout);
             break;
         case LPC_READ_FILE:
             a = atoi(lpcRequest->lpcArgs[1].argData);
-            printf("atoi : %d\n", a);
             size = ReadFile(atoi(lpcRequest->lpcArgs[0].argData),
                             atoi(lpcRequest->lpcArgs[1].argData), clientPid);
             break;
@@ -74,13 +72,12 @@ int main(void) {
             CloseFile(atoi(lpcRequest->lpcArgs[0].argData), clientPid);
             break;
         case LPC_MAKE_DIRECTORY:
-            printf("makedir in\n");
             MakeDirectory(lpcRequest->lpcArgs[0].argData,
                           atoi(lpcRequest->lpcArgs[1].argData), clientPid);
             break;
-		case LPC_REMOVE_DIRECTORY:
-                    RemoveDirectory(lpcRequest->lpcArgs[0].argData, clientPid);
-                    break;
+        case LPC_REMOVE_DIRECTORY:
+            RemoveDirectory(lpcRequest->lpcArgs[0].argData, clientPid);
+            break;
         }
     }
 

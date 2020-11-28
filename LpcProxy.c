@@ -31,7 +31,6 @@ int OpenFile(char *path, int flags) {
     lpcArg0.argSize = sizeof(path);
     strcpy(lpcArg0.argData, path);
     lpcArg1.argSize = 4;
-    // strcpy(lpcArg1.argData, flags);
     lpcArg1.argData[0] = flags;
     sprintf(lpcArg1.argData, "%d", flags);
 
@@ -41,20 +40,12 @@ int OpenFile(char *path, int flags) {
     lpcRequest.lpcArgs[0] = lpcArg0;
     lpcRequest.lpcArgs[1] = lpcArg1;
 
-    //printf("\n\nlpcArg0's data : %s, %ld\n\n", lpcRequest.lpcArgs[0].argData,
-     //      lpcRequest.pid);
-
     msgsnd(msqid_client, &lpcRequest, sizeof(lpcRequest), 0);
-    //printf("sended open\n");
     LpcResponse lpcResponse;
     memset(&lpcResponse, 0x00, sizeof(LpcResponse));
-    //printf("waiting\n");
 
     msgrcv(msqid_server, &lpcResponse, sizeof(LpcResponse), cpid, 0);
-    //printf("%c\n", lpcResponse.responseData[0]);
     int a = atoi(lpcResponse.responseData);
-    //printf("open seccess %d\n", a);
-    //fflush(stdout);
     return a;
 }
 
@@ -70,23 +61,17 @@ int ReadFile(int fd, void *pBuf, int size) {
     memset(&lpcRequest, 0x00, sizeof(lpcRequest));
 
     lpcArg0.argSize = 4;
-    // strcpy(lpcArg0.argData, fd);
     lpcArg0.argData[0] = fd;
     sprintf(lpcArg0.argData, "%d", fd);
     lpcArg1.argSize = 4;
-    // strcpy(lpcArg1.argData, size);
     lpcArg1.argData[0] = size;
     sprintf(lpcArg1.argData, "%d", size);
-
-    //printf("ssize : %c, sssize : %s", lpcArg0.argData[0], lpcArg1.argData);
 
     lpcRequest.pid = getpid();
     lpcRequest.service = LPC_READ_FILE;
     lpcRequest.numArg = 2;
     lpcRequest.lpcArgs[0] = lpcArg0;
     lpcRequest.lpcArgs[1] = lpcArg1;
-
-    //printf("size: %c", lpcRequest.lpcArgs[1].argData[0]);
 
     msgsnd(msqid_client, &lpcRequest, sizeof(lpcRequest), 0);
 
@@ -95,10 +80,8 @@ int ReadFile(int fd, void *pBuf, int size) {
 
     msgrcv(msqid_server, &lpcResponse, sizeof(LpcResponse), getpid(), 0);
 
-    //printf("lpcResponse.responseData : %s\n", lpcResponse.responseData);
     strcpy(pBuf, lpcResponse.responseData);
 
-    //printf("read succecss, %d\n", lpcResponse.responseSize);
     return lpcResponse.responseSize;
 }
 
@@ -121,8 +104,6 @@ int WriteFile(int fd, void *pBuf, int size) {
     lpcArg2.argSize = 4;
     lpcArg2.argData[0] = size;
     sprintf(lpcArg2.argData, "%d", size);
-
-    //printf("bufsize : %d, string : %s\n", lpcArg1.argSize, lpcArg0.argData);
 
     lpcRequest.pid = getpid();
     lpcRequest.service = LPC_WRITE_FILE;
@@ -151,8 +132,6 @@ off_t SeekFile(int fd, off_t offset, int whence) {
 
     memset(&lpcRequest, 0x00, sizeof(lpcRequest));
 
-    //printf("fd : %d\n", fd);
-
     lpcArg0.argSize = 4;
     lpcArg0.argData[0] = fd;
     sprintf(lpcArg0.argData, "%d", fd);
@@ -162,8 +141,6 @@ off_t SeekFile(int fd, off_t offset, int whence) {
     lpcArg2.argSize = 4;
     lpcArg2.argData[0] = whence;
     sprintf(lpcArg2.argData, "%d", whence);
-
-    //printf("%s, %d\n", lpcArg0.argData, lpcArg1.argSize);
 
     lpcRequest.pid = getpid();
     lpcRequest.service = LPC_SEEK_FILE;
@@ -223,8 +200,6 @@ int MakeDirectory(char *path, int mode) {
 
     memset(&lpcRequest, 0x00, sizeof(lpcRequest));
 
-   // printf("mode: %d\n", mode);
-
     lpcArg0.argSize = sizeof(path);
     strcpy(lpcArg0.argData, path);
     lpcArg1.argSize = 4;
@@ -238,13 +213,11 @@ int MakeDirectory(char *path, int mode) {
     lpcRequest.lpcArgs[1] = lpcArg1;
 
     msgsnd(msqid_client, &lpcRequest, sizeof(lpcRequest), 0);
-    //printf("sended messege\n");
 
     LpcResponse lpcResponse;
     memset(&lpcResponse, 0x00, sizeof(LpcResponse));
 
     msgrcv(msqid_server, &lpcResponse, sizeof(LpcResponse), getpid(), 0);
-    //printf("receieved messege");
     return atoi(lpcResponse.responseData);
 }
 
@@ -268,7 +241,6 @@ int RemoveDirectory(char *path) {
     lpcRequest.lpcArgs[0] = lpcArg0;
 
     msgsnd(msqid_client, &lpcRequest, sizeof(lpcRequest), 0);
-    //printf("sended messege\n");
 
     LpcResponse lpcResponse;
     memset(&lpcResponse, 0x00, sizeof(LpcResponse));

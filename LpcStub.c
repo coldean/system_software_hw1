@@ -25,10 +25,7 @@ int OpenFile(char *path, int flag, int clientPid) {
     key_t mykey_server = 2222;
     int msqid_client = msgget(mykey_client, IPC_CREAT | PERMS);
     int msqid_server = msgget(mykey_server, IPC_CREAT | PERMS);
-    // printf("%s", path);
-    // printf("\nopenfile in\n");
     int fd = open(path, flag, 0666);
-    // printf("file opend fd: %d pth : %s\n", fd, path);
 
     LpcResponse lpcResponse;
     memset(&lpcResponse, 0x00, sizeof(LpcResponse));
@@ -36,13 +33,10 @@ int OpenFile(char *path, int flag, int clientPid) {
     lpcResponse.pid = clientPid;
     lpcResponse.errorno = 0;
     lpcResponse.responseSize = 4;
-    // strcpy(lpcResponse.responseData, fd);
     lpcResponse.responseData[0] = fd;
     sprintf(lpcResponse.responseData, "%d", fd);
 
-    // printf("cliend pid : %ld\n", lpcResponse.pid);
     msgsnd(msqid_server, &lpcResponse, sizeof(lpcResponse), 0);
-    // printf("send messege : %c\n", lpcResponse.responseData[0]);
     return fd;
 }
 
@@ -52,9 +46,6 @@ int ReadFile(int fd, int readCount, int clientPid) {
     int msqid_client = msgget(mykey_client, IPC_CREAT | PERMS);
     int msqid_server = msgget(mykey_server, IPC_CREAT | PERMS);
 
-    // printf("read - fd, readCound, cliendPid %d %d %d\n", fd, readCount,
-    //      clientPid);
-
     LpcResponse lpcResponse;
     memset(&lpcResponse, 0x00, sizeof(LpcResponse));
 
@@ -63,14 +54,10 @@ int ReadFile(int fd, int readCount, int clientPid) {
 
     int rsize = read(fd, buf, readCount);
 
-    printf("buf : %s\n", buf);
-
     lpcResponse.pid = clientPid;
     lpcResponse.errorno = 0;
     lpcResponse.responseSize = rsize;
     strcpy(lpcResponse.responseData, buf);
-
-    printf("lpcResponse.responseData : %s\n", lpcResponse.responseData);
 
     msgsnd(msqid_server, &lpcResponse, sizeof(lpcResponse), 0);
 
@@ -83,10 +70,7 @@ int WriteFile(int fd, char *pBuf, int writeCount, int clientPid) {
     int msqid_client = msgget(mykey_client, IPC_CREAT | PERMS);
     int msqid_server = msgget(mykey_server, IPC_CREAT | PERMS);
 
-    printf("fd : %d, pBuf = %s, writeCount : %d\n", fd, pBuf, writeCount);
-
     int wsize = write(fd, pBuf, writeCount);
-    printf("wrize : %d\n", wsize);
 
     LpcResponse lpcResponse;
     memset(&lpcResponse, 0x00, sizeof(LpcResponse));
@@ -107,8 +91,6 @@ off_t SeekFile(int fd, off_t offset, int whence, int clientPid) {
     key_t mykey_server = 2222;
     int msqid_client = msgget(mykey_client, IPC_CREAT | PERMS);
     int msqid_server = msgget(mykey_server, IPC_CREAT | PERMS);
-
-    printf("fd : %d offset : %ld whence : %d\n", fd, offset, whence);
 
     off_t offs = lseek(fd, (off_t)offset, whence);
 
