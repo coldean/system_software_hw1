@@ -137,7 +137,7 @@ int WriteFile(int fd, void *pBuf, int size) {
     memset(&lpcResponse, 0x00, sizeof(LpcResponse));
 
     msgrcv(msqid_server, &lpcResponse, sizeof(LpcResponse), getpid(), 0);
-    return lpcResponse.responseSize;
+    return atoi(lpcResponse.responseData);
 }
 
 off_t SeekFile(int fd, off_t offset, int whence) {
@@ -178,7 +178,8 @@ off_t SeekFile(int fd, off_t offset, int whence) {
     memset(&lpcResponse, 0x00, sizeof(LpcResponse));
 
     msgrcv(msqid_server, &lpcResponse, sizeof(LpcResponse), getpid(), 0);
-    return lpcResponse.responseSize;
+    int a = atoi(lpcResponse.responseData);
+    return (off_t)a;
 }
 
 int CloseFile(int fd) {

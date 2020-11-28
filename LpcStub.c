@@ -4,12 +4,12 @@
 #include "LpcStub.h"
 #include "Lpc.h"
 #include <fcntl.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <sys/stat.h>
-#include <math.h>
 
 #define PERMS 0600
 
@@ -25,10 +25,10 @@ int OpenFile(char *path, int flag, int clientPid) {
     key_t mykey_server = 2222;
     int msqid_client = msgget(mykey_client, IPC_CREAT | PERMS);
     int msqid_server = msgget(mykey_server, IPC_CREAT | PERMS);
-    //printf("%s", path);
-    //printf("\nopenfile in\n");
+    // printf("%s", path);
+    // printf("\nopenfile in\n");
     int fd = open(path, flag, 0666);
-    //printf("file opend fd: %d pth : %s\n", fd, path);
+    // printf("file opend fd: %d pth : %s\n", fd, path);
 
     LpcResponse lpcResponse;
     memset(&lpcResponse, 0x00, sizeof(LpcResponse));
@@ -40,9 +40,9 @@ int OpenFile(char *path, int flag, int clientPid) {
     lpcResponse.responseData[0] = fd;
     sprintf(lpcResponse.responseData, "%d", fd);
 
-    //printf("cliend pid : %ld\n", lpcResponse.pid);
+    // printf("cliend pid : %ld\n", lpcResponse.pid);
     msgsnd(msqid_server, &lpcResponse, sizeof(lpcResponse), 0);
-    //printf("send messege : %c\n", lpcResponse.responseData[0]);
+    // printf("send messege : %c\n", lpcResponse.responseData[0]);
     return fd;
 }
 
@@ -52,8 +52,8 @@ int ReadFile(int fd, int readCount, int clientPid) {
     int msqid_client = msgget(mykey_client, IPC_CREAT | PERMS);
     int msqid_server = msgget(mykey_server, IPC_CREAT | PERMS);
 
-    //printf("read - fd, readCound, cliendPid %d %d %d\n", fd, readCount,
-     //      clientPid);
+    // printf("read - fd, readCound, cliendPid %d %d %d\n", fd, readCount,
+    //      clientPid);
 
     LpcResponse lpcResponse;
     memset(&lpcResponse, 0x00, sizeof(LpcResponse));
@@ -93,7 +93,7 @@ int WriteFile(int fd, char *pBuf, int writeCount, int clientPid) {
 
     lpcResponse.pid = clientPid;
     lpcResponse.errorno = 0;
-    lpcResponse.responseSize = wsize;
+    lpcResponse.responseSize = 4;
     lpcResponse.responseData[0] = wsize;
     sprintf(lpcResponse.responseData, "%d", wsize);
 
@@ -117,7 +117,7 @@ off_t SeekFile(int fd, off_t offset, int whence, int clientPid) {
 
     lpcResponse.pid = clientPid;
     lpcResponse.errorno = 0;
-    lpcResponse.responseSize = offs;
+    lpcResponse.responseSize = 8;
     lpcResponse.responseData[0] = offs;
     sprintf(lpcResponse.responseData, "%ld", offs);
 

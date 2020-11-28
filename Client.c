@@ -14,18 +14,18 @@ int main(void) {
 
     char buf[11];
     memset(buf, 0x00, 11);
-    int fd = OpenFile("text.txt", O_CREAT | O_RDWR);
+    int fd = OpenFile("text1.txt", O_CREAT | O_RDWR);
 
     //int r = ReadFile(fd, buf, 10);
     //printf("read %s, %d", buf, r);
 
-   // WriteFile(fd, "therealshitclass", 10);
+   	WriteFile(fd, "therealshitclass", 10);
 
-    //SeekFile(fd, 1, SEEK_CUR);
+    SeekFile(fd, 4, SEEK_CUR);
 
-    //WriteFile(fd, "fuck", 5);
+    WriteFile(fd, "fuck", 4);
 
     //printf("close : %d", CloseFile(fd));
-    MakeDirectory("hi", 0777);
+    //MakeDirectory("hi", 0777);
     return 0;
 }

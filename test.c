@@ -7,16 +7,14 @@
 #include <unistd.h>
 
 int main() {
-    /*
+
     int fd = open("./text.txt", O_CREAT | O_RDWR);
     char *msg = "hi";
-    char *msg2 = "plusssssssssssssssssss";
+    char *msg2 = "fuck";
     write(fd, (char *)msg, 2);
-    lseek(fd, 7, SEEK_CUR);
-    write(fd, (char *)msg2, 15);
+    lseek(fd, 1, SEEK_CUR);
+    write(fd, (char *)msg2, 5);
     close(fd);
-    */
+
     // mkdir("one", 0777);
-    int a = 0777;
-    printf("%d", a);
 }
